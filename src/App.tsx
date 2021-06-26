@@ -1,9 +1,13 @@
 import React from 'react';
-import TextEditor from './TextEditor';
+import TextEditor, { TextEditorProvider } from './TextEditor';
+import ToolPanel from './ToolPanel';
 
 function App() {
   return (
-    <TextEditor />
+    <TextEditorProvider >
+      <ToolPanel />
+      <TextEditor />
+    </TextEditorProvider>
   );
 }
 

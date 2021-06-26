@@ -1,15 +1,15 @@
 .text-editor {
   border: 1px solid black;
 
-  :global(.aligment-center){
+  .aligment-center {
     text-align: center;
   }
 
-  :global(.aligment-left){
+  .aligment-left {
     text-align: left;
   }
 
-  :global(.aligment-right){
+  .aligment-right{
     text-align: right;
   }
 }

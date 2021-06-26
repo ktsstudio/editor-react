@@ -23,22 +23,35 @@ export type EditorApi = {
   toggleBlockType: (blockType: BlockType) => void;
   blockStyleFn: (contentBlock: ContentBlock) => string;
   setBlockData: (data: {}) => void;
+  currentBlockType: BlockType;
+  setEditorRef: (editor: Editor) => void
   toHtml: () => void;
 }
 
 const html = '<h1 style="text-align:center">Привет</h1><h2 style="text-align:right">Как делишки</h2>';
 
-export const useEditor = (ref: React.MutableRefObject<Editor | null>): EditorApi => {
-
+export const useEditor = (): EditorApi => {
+  const editorRef = React.useRef<Editor | null>(null);
   const [state, setState] = React.useState(html ? EditorState.createWithContent(HTMLtoState(html)): EditorState.createEmpty());
 
+  const setEditorRef = React.useCallback((editor: Editor) => {
+    editorRef.current = editor;
+  }, []);
+
   const focus = React.useCallback(() => {
-    ref.current?.focus();
-  }, [ref]);
+    editorRef.current?.focus();
+  }, [editorRef]);
 
   const toggleBlockType = React.useCallback((blockType: BlockType) => {
     setState((currentState) => RichUtils.toggleBlockType(currentState, blockType))
   }, []);
+
+  const currentBlockType = React.useMemo(() => {
+    const selection = state.getSelection();
+    const content = state.getCurrentContent()
+    const block = content.getBlockForKey(selection.getStartKey());
+    return block.getType() as BlockType;
+  }, [state]);
 
   const setBlockData = React.useCallback((data) => {
     setState((currentState) => {
@@ -60,7 +73,9 @@ export const useEditor = (ref: React.MutableRefObject<Editor | null>): EditorApi
     state,
     onChange: setState,
     focus,
+    setEditorRef,
     toggleBlockType,
+    currentBlockType,
     blockStyleFn,
     setBlockData,
     toHtml

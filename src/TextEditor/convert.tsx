@@ -16,9 +16,9 @@ export const stateToHTML = convertToHTML({
         return <h1 style={style} />;
       case BlockType.h2:
         return <h2 style={style} />;
-      case BlockType.atomic:
-          return <figure style={style} />;
-      case BlockType.unstyled:
+      // case BlockType.atomic:
+      //     return <figure style={style} />;
+      case BlockType.default:
         return <p style={style} />;
       default:
         return null;
@@ -46,7 +46,7 @@ export const HTMLtoState = convertFromHTML({
         };
       case 'div':
       case 'p':
-        return BlockType.unstyled;
+        return BlockType.default;
       default:
         return null;
     }
