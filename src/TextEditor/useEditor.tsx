@@ -1,7 +1,8 @@
-import {  EditorBlock, Editor, EditorState, RichUtils, ContentBlock, Modifier } from 'draft-js';
+import {  CompositeDecorator, DraftEntityMutability, Editor, EditorState, RichUtils, ContentBlock, Modifier } from 'draft-js';
 import * as React from 'react';
-import { BlockType, InlineStyle } from './config';
+import { BlockType, EntityType, InlineStyle } from './config';
 import { HTMLtoState, stateToHTML } from './convert';
+import LinkDecorator from './Link';
 
 const blockStyleFn = (contentBlock: ContentBlock): string => {
   // const type = contentBlock.getType();
@@ -28,13 +29,17 @@ export type EditorApi = {
   toHtml: () => void;
   toggleInlineStyle: (inlineStyle: InlineStyle) => void;
   hasInlineStyle: (inlineStyle: InlineStyle) => boolean;
+  addLink: (url: string) => void;
+  setEntityData: (entityKey: string, data: Record<string, string>) => void;
 }
 
 const html = '<h1 style="text-align:center">Привет</h1><h2 style="text-align:right">Как делишки</h2>';
 
+const decorator = new CompositeDecorator([LinkDecorator]);
+
 export const useEditor = (): EditorApi => {
   const editorRef = React.useRef<Editor | null>(null);
-  const [state, setState] = React.useState(html ? EditorState.createWithContent(HTMLtoState(html)): EditorState.createEmpty());
+  const [state, setState] = React.useState(html ? EditorState.createWithContent(HTMLtoState(html), decorator): EditorState.createEmpty(decorator));
 
   const setEditorRef = React.useCallback((editor: Editor) => {
     editorRef.current = editor;
@@ -76,6 +81,31 @@ export const useEditor = (): EditorApi => {
     })
   }, []);
 
+  const setEntityData = React.useCallback((entityKey, data) => {
+    setState((currentState) => {
+      const content = currentState.getCurrentContent()
+      const contentStateUpdated = content.mergeEntityData(
+        entityKey,
+        data,
+      )
+      return EditorState.push(currentState, contentStateUpdated, 'apply-entity');
+    })
+  }, []);
+
+  const addEntity = React.useCallback((entityType: EntityType, data: Record<string, string>, mutability: DraftEntityMutability) => {
+    setState((currentState) => {
+      const contentState = currentState.getCurrentContent();
+      const contentStateWithEntity = contentState.createEntity(entityType, mutability, data);
+      const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+      const newState = EditorState.set(currentState, { currentContent: contentStateWithEntity });
+      return RichUtils.toggleLink(newState, newState.getSelection(), entityKey);
+    })
+  }, []);
+
+  const addLink = React.useCallback((url) => {
+    addEntity(EntityType.link, { url }, 'MUTABLE')
+  }, [addEntity]);
+
   const toHtml = React.useCallback(() => {
     console.log(stateToHTML(state.getCurrentContent()));
   }, [state]);
@@ -91,6 +121,8 @@ export const useEditor = (): EditorApi => {
     setBlockData,
     toggleInlineStyle,
     hasInlineStyle,
-    toHtml
+    toHtml,
+    addLink,
+    setEntityData
   }
 }

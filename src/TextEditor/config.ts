@@ -1,6 +1,10 @@
 import Immutable from 'immutable';
 import { DefaultDraftBlockRenderMap } from 'draft-js';
 
+export enum EntityType {
+  link = 'LINK',
+}
+
 export enum BlockType {
   h1 = 'header-one',
   h2 = 'header-two',
