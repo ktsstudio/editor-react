@@ -16,6 +16,13 @@ export enum BlockType {
   default = 'unstyled',
 }
 
+export enum InlineStyle {
+  BOLD = 'BOLD',
+  ITALIC = 'ITALIC',
+  UNDERLINE = 'UNDERLINE',
+  ACCENT = 'ACCENT'
+}
+
 export const BLOCK_LABELS = {
   [BlockType.h1]: 'Заголовок 1',
   [BlockType.h2]: 'Заголовок 2',
@@ -38,3 +45,10 @@ const CUSTOM_BLOCK_RENDER_MAP = Immutable.Map({
 });
 
 export const BLOCK_RENDER_MAP = DefaultDraftBlockRenderMap.merge(CUSTOM_BLOCK_RENDER_MAP);
+
+export const CUSTOM_STYLE_MAP = {
+  [InlineStyle.ACCENT]: {
+    backgroundColor: '#F7F6F3',
+    color: '#A41E68',
+  },
+};

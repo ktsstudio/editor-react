@@ -1,15 +1,39 @@
 import * as React from 'react';
 import { useEditorApi } from '../TextEditor';
-import { BlockType } from '../TextEditor/config';
+import cn from 'classnames';
+import { BlockType, InlineStyle } from '../TextEditor/config';
 import './ToolPanel.scss';
 
 const ToolPanel:React.FC = () => {
-  const { toggleBlockType } = useEditorApi();
+  const { toggleBlockType, currentBlockType, toggleInlineStyle, hasInlineStyle } = useEditorApi();
 
   return (
     <div className="tool-panel">
-      <button onClick={() => toggleBlockType(BlockType.h1)}>h1</button>
-      <button onClick={() => toggleBlockType(BlockType.h2)}>h2</button>
+      <button className={cn('tool-panel__item',  currentBlockType === BlockType.h1 && 'tool-panel__item_active')} onMouseDown={(e) => {
+        e.preventDefault();
+        toggleBlockType(BlockType.h1);
+      }}>h1</button>
+      <button className={cn('tool-panel__item',  currentBlockType === BlockType.h2 && 'tool-panel__item_active')} onMouseDown={(e) => {
+        e.preventDefault();
+        toggleBlockType(BlockType.h2);
+      }}>h2</button>
+      <button className={cn('tool-panel__item',  currentBlockType === BlockType.cite && 'tool-panel__item_active')} onMouseDown={(e) => {
+        e.preventDefault();
+        toggleBlockType(BlockType.cite);
+      }}>cite</button>
+      <button className={cn('tool-panel__item',  currentBlockType === BlockType.default && 'tool-panel__item_active')} onMouseDown={(e) => {
+        e.preventDefault();
+        toggleBlockType(BlockType.default);
+      }}>Просто текст</button>
+
+      {
+        Object.values(InlineStyle).map((v) => (
+          <button className={cn('tool-panel__item',  hasInlineStyle(v) && 'tool-panel__item_active')} onMouseDown={(e) => {
+            e.preventDefault();
+            toggleInlineStyle(v);
+          }}>{v}</button>
+        ))
+    }
       {/* <button onClick={() => toggleBlockType(BlockType.list)}>Atomic</button> */}
       {/* <button onClick={() => editorApi.setBlockData({ 'text-align': 'left' })}>left</button>
       <button onClick={() => editorApi.setBlockData({ 'text-align': 'center' })}>center</button>

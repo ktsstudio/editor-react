@@ -1,6 +1,6 @@
 import {  EditorBlock, Editor, EditorState, RichUtils, ContentBlock, Modifier } from 'draft-js';
 import * as React from 'react';
-import { BlockType } from './config';
+import { BlockType, InlineStyle } from './config';
 import { HTMLtoState, stateToHTML } from './convert';
 
 const blockStyleFn = (contentBlock: ContentBlock): string => {
@@ -26,6 +26,8 @@ export type EditorApi = {
   currentBlockType: BlockType;
   setEditorRef: (editor: Editor) => void
   toHtml: () => void;
+  toggleInlineStyle: (inlineStyle: InlineStyle) => void;
+  hasInlineStyle: (inlineStyle: InlineStyle) => boolean;
 }
 
 const html = '<h1 style="text-align:center">Привет</h1><h2 style="text-align:right">Как делишки</h2>';
@@ -53,6 +55,15 @@ export const useEditor = (): EditorApi => {
     return block.getType() as BlockType;
   }, [state]);
 
+  const toggleInlineStyle = React.useCallback((inlineStyle: InlineStyle) => {
+    setState((currentState) => RichUtils.toggleInlineStyle(currentState, inlineStyle))
+  }, []);
+
+  const hasInlineStyle = React.useCallback((inlineStyle: InlineStyle) => {
+    const currentStyle = state.getCurrentInlineStyle();
+    return currentStyle.has(inlineStyle);
+  }, [state]);
+
   const setBlockData = React.useCallback((data) => {
     setState((currentState) => {
       const newContentState = Modifier.setBlockData(
@@ -78,6 +89,8 @@ export const useEditor = (): EditorApi => {
     currentBlockType,
     blockStyleFn,
     setBlockData,
+    toggleInlineStyle,
+    hasInlineStyle,
     toHtml
   }
 }

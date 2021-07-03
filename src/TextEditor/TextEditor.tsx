@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Editor } from 'draft-js';
 import './TextEditor.scss';
-import { BLOCK_RENDER_MAP } from './config';
+import { BLOCK_RENDER_MAP, CUSTOM_STYLE_MAP } from './config';
 import { useEditorApi } from './context';
 import cn from 'classnames';
 
@@ -16,6 +16,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ className }) => {
     <div className={cn("text-editor", className)}>
       <Editor
         spellCheck
+        customStyleMap={CUSTOM_STYLE_MAP}
         blockRenderMap={BLOCK_RENDER_MAP}
         blockStyleFn={editorApi.blockStyleFn}
         ref={editorApi.setEditorRef}

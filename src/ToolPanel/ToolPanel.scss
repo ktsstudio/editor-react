@@ -1,4 +1,12 @@
 .tool-panel {
   display: flex;
   align-items: center;
+
+  &__item {
+    flex-shrink: 0;
+
+    &_active {
+      color: red;
+    }
+  }
 }
