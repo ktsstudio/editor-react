@@ -1,6 +1,6 @@
-import {  CompositeDecorator, DraftEntityMutability, Editor, EditorState, RichUtils, ContentBlock, Modifier } from 'draft-js';
+import { KeyBindingUtil, getDefaultKeyBinding, DraftHandleValue, CompositeDecorator, DraftEntityMutability, Editor, EditorState, RichUtils, ContentBlock, Modifier } from 'draft-js';
 import * as React from 'react';
-import { BlockType, EntityType, InlineStyle } from './config';
+import { BlockType, EntityType, InlineStyle, KeyCommand } from './config';
 import { HTMLtoState, stateToHTML } from './convert';
 import LinkDecorator from './Link';
 
@@ -31,6 +31,8 @@ export type EditorApi = {
   hasInlineStyle: (inlineStyle: InlineStyle) => boolean;
   addLink: (url: string) => void;
   setEntityData: (entityKey: string, data: Record<string, string>) => void;
+  handleKeyCommand: (command: KeyCommand, editorState: EditorState) => DraftHandleValue;
+  handlerKeyBinding: (e: React.KeyboardEvent) => KeyCommand | null
 }
 
 const html = '<h1 style="text-align:center">Привет</h1><h2 style="text-align:right">Как делишки</h2>';
@@ -106,6 +108,30 @@ export const useEditor = (): EditorApi => {
     addEntity(EntityType.link, { url }, 'MUTABLE')
   }, [addEntity]);
 
+  const handleKeyCommand = React.useCallback((command: KeyCommand, editorState: EditorState) => {
+    if (command === 'accent') {
+      toggleInlineStyle(InlineStyle.ACCENT);
+      return 'handled';
+    }
+
+    const newState = RichUtils.handleKeyCommand(editorState, command);
+
+    if (newState) {
+      setState(newState);
+      return 'handled';
+    }
+
+    return 'not-handled';
+  }, []);
+
+  const handlerKeyBinding = React.useCallback((e: React.KeyboardEvent) => {
+    if (e.keyCode === 81 && KeyBindingUtil.hasCommandModifier(e)) {
+      return 'accent';
+    }
+
+    return getDefaultKeyBinding(e);
+  }, []);
+
   const toHtml = React.useCallback(() => {
     console.log(stateToHTML(state.getCurrentContent()));
   }, [state]);
@@ -123,6 +149,8 @@ export const useEditor = (): EditorApi => {
     hasInlineStyle,
     toHtml,
     addLink,
-    setEntityData
+    setEntityData,
+    handleKeyCommand,
+    handlerKeyBinding
   }
 }

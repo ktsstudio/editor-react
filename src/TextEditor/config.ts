@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import { DefaultDraftBlockRenderMap } from 'draft-js';
+import { DraftEditorCommand, DefaultDraftBlockRenderMap } from 'draft-js';
 
 export enum EntityType {
   link = 'LINK',
@@ -41,6 +41,8 @@ export const BLOCK_LABELS = {
   [BlockType.cite]: 'Сноска',
   [BlockType.default]: 'Обычный текст',
 }
+
+export type KeyCommand = DraftEditorCommand | 'accent';
 
 const CUSTOM_BLOCK_RENDER_MAP = Immutable.Map({
   cite: {

@@ -16,6 +16,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ className }) => {
     <div className={cn("text-editor", className)}>
       <Editor
         spellCheck
+        handleKeyCommand={editorApi.handleKeyCommand}
         customStyleMap={CUSTOM_STYLE_MAP}
         blockRenderMap={BLOCK_RENDER_MAP}
         blockStyleFn={editorApi.blockStyleFn}
@@ -23,6 +24,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ className }) => {
         placeholder="Введите ваш текст"
         editorState={editorApi.state}
         onChange={editorApi.onChange}
+        keyBindingFn={editorApi.handlerKeyBinding}
       />
     </div>
   );
