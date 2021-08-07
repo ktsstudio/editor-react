@@ -1,32 +1,18 @@
-import { KeyBindingUtil, getDefaultKeyBinding, DraftHandleValue, CompositeDecorator, DraftEntityMutability, Editor, EditorState, RichUtils, ContentBlock, Modifier } from 'draft-js';
+import { KeyBindingUtil, getDefaultKeyBinding, DraftHandleValue, CompositeDecorator, DraftEntityMutability, Editor, EditorState, RichUtils, Modifier } from 'draft-js';
 import * as React from 'react';
 import { BlockType, EntityType, InlineStyle, KeyCommand } from './config';
 import { HTMLtoState, stateToHTML } from './convert';
 import LinkDecorator from './Link';
-
-const blockStyleFn = (contentBlock: ContentBlock): string => {
-  // const type = contentBlock.getType();
-
-  const blockAlignment =
-      contentBlock.getData() && contentBlock.getData().get('text-align');
-
-  if (blockAlignment) {
-      return `aligment-${blockAlignment}`;
-  }
-
-  return '';
-}
 
 export type EditorApi = {
   state: EditorState;
   onChange: (state: EditorState) => void;
   focus: () => void;
   toggleBlockType: (blockType: BlockType) => void;
-  blockStyleFn: (contentBlock: ContentBlock) => string;
   setBlockData: (data: {}) => void;
   currentBlockType: BlockType;
   setEditorRef: (editor: Editor) => void
-  toHtml: () => void;
+  toHtml: () => string;
   toggleInlineStyle: (inlineStyle: InlineStyle) => void;
   hasInlineStyle: (inlineStyle: InlineStyle) => boolean;
   addLink: (url: string) => void;
@@ -35,11 +21,9 @@ export type EditorApi = {
   handlerKeyBinding: (e: React.KeyboardEvent) => KeyCommand | null
 }
 
-const html = '<h1 style="text-align:center">Привет</h1><h2 style="text-align:right">Как делишки</h2>';
-
 const decorator = new CompositeDecorator([LinkDecorator]);
 
-export const useEditor = (): EditorApi => {
+export const useEditor = (html?: string): EditorApi => {
   const editorRef = React.useRef<Editor | null>(null);
   const [state, setState] = React.useState(html ? EditorState.createWithContent(HTMLtoState(html), decorator): EditorState.createEmpty(decorator));
 
@@ -122,7 +106,7 @@ export const useEditor = (): EditorApi => {
     }
 
     return 'not-handled';
-  }, []);
+  }, [toggleInlineStyle]);
 
   const handlerKeyBinding = React.useCallback((e: React.KeyboardEvent) => {
     if (e.keyCode === 81 && KeyBindingUtil.hasCommandModifier(e)) {
@@ -133,7 +117,7 @@ export const useEditor = (): EditorApi => {
   }, []);
 
   const toHtml = React.useCallback(() => {
-    console.log(stateToHTML(state.getCurrentContent()));
+    return (stateToHTML(state.getCurrentContent()));
   }, [state]);
 
   return {
@@ -143,7 +127,6 @@ export const useEditor = (): EditorApi => {
     setEditorRef,
     toggleBlockType,
     currentBlockType,
-    blockStyleFn,
     setBlockData,
     toggleInlineStyle,
     hasInlineStyle,

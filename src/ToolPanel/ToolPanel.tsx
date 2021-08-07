@@ -5,7 +5,7 @@ import { BlockType, InlineStyle } from '../TextEditor/config';
 import './ToolPanel.scss';
 
 const ToolPanel:React.FC = () => {
-  const { addLink, toggleBlockType, currentBlockType, toggleInlineStyle, hasInlineStyle } = useEditorApi();
+  const { toHtml, addLink, toggleBlockType, currentBlockType, toggleInlineStyle, hasInlineStyle } = useEditorApi();
 
   return (
     <div className="tool-panel">
@@ -33,21 +33,18 @@ const ToolPanel:React.FC = () => {
             toggleInlineStyle(v);
           }}>{v}</button>
         ))
-    }
-
-    <button onClick={() => {
-      const url = prompt('URL:');
-      if (url) {
-        addLink(url);
       }
-    }}>
-      LINK
-    </button>
-      {/* <button onClick={() => toggleBlockType(BlockType.list)}>Atomic</button> */}
-      {/* <button onClick={() => editorApi.setBlockData({ 'text-align': 'left' })}>left</button>
-      <button onClick={() => editorApi.setBlockData({ 'text-align': 'center' })}>center</button>
-      <button onClick={() => editorApi.setBlockData({ 'text-align': 'right' })}>right</button> */}
-      {/* <button onClick={editorApi.toHtml}>Print</button> */}
+
+      <button onClick={() => {
+        const url = prompt('URL:');
+        if (url) {
+          addLink(url);
+        }
+      }}>
+        LINK
+      </button>
+
+      <button onClick={toHtml}>Print</button>
     </div>
   );
 }
