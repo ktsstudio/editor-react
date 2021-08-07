@@ -117,7 +117,7 @@ export const useEditor = (html?: string): EditorApi => {
   }, []);
 
   const toHtml = React.useCallback(() => {
-    return (stateToHTML(state.getCurrentContent()));
+    return stateToHTML(state.getCurrentContent());
   }, [state]);
 
   return {

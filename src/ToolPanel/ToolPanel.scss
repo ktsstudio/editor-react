@@ -1,9 +1,13 @@
 .tool-panel {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  margin-left: -5px;
+  margin-right: -5px;
 
   &__item {
     flex-shrink: 0;
+    margin: 0 5px 10px;
 
     &_active {
       color: red;

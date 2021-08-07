@@ -1,3 +1,9 @@
 .text-editor {
   border: 1px solid black;
+  padding: 15px;
+  cursor: pointer;
+}
+
+.public-DraftEditor-content {
+  min-height: 100px;
 }

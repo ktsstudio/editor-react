@@ -12,19 +12,19 @@ const ToolPanel:React.FC = () => {
       <button className={cn('tool-panel__item',  currentBlockType === BlockType.h1 && 'tool-panel__item_active')} onMouseDown={(e) => {
         e.preventDefault();
         toggleBlockType(BlockType.h1);
-      }}>h1</button>
+      }}>Заголовок</button>
       <button className={cn('tool-panel__item',  currentBlockType === BlockType.h2 && 'tool-panel__item_active')} onMouseDown={(e) => {
         e.preventDefault();
         toggleBlockType(BlockType.h2);
-      }}>h2</button>
+      }}>Подзаголовок</button>
       <button className={cn('tool-panel__item',  currentBlockType === BlockType.cite && 'tool-panel__item_active')} onMouseDown={(e) => {
         e.preventDefault();
         toggleBlockType(BlockType.cite);
-      }}>cite</button>
+      }}>Сноска</button>
       <button className={cn('tool-panel__item',  currentBlockType === BlockType.default && 'tool-panel__item_active')} onMouseDown={(e) => {
         e.preventDefault();
         toggleBlockType(BlockType.default);
-      }}>Просто текст</button>
+      }}>Простой</button>
 
       {
         Object.values(InlineStyle).map((v) => (
@@ -35,7 +35,7 @@ const ToolPanel:React.FC = () => {
         ))
       }
 
-      <button onClick={() => {
+      <button className="tool-panel__item" onClick={() => {
         const url = prompt('URL:');
         if (url) {
           addLink(url);
@@ -44,7 +44,9 @@ const ToolPanel:React.FC = () => {
         LINK
       </button>
 
-      <button onClick={toHtml}>Print</button>
+      <button className="tool-panel__item" onClick={() => {
+        console.log(toHtml());
+      }}>Print</button>
     </div>
   );
 }
