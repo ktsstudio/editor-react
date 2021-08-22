@@ -19,7 +19,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ className }) => {
         handleKeyCommand={editorApi.handleKeyCommand}
         customStyleMap={CUSTOM_STYLE_MAP}
         blockRenderMap={BLOCK_RENDER_MAP}
-        ref={editorApi.setEditorRef}
         editorState={editorApi.state}
         onChange={editorApi.onChange}
         keyBindingFn={editorApi.handlerKeyBinding}

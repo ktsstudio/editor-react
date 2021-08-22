@@ -1,4 +1,4 @@
-import { KeyBindingUtil, getDefaultKeyBinding, DraftHandleValue, CompositeDecorator, DraftEntityMutability, Editor, EditorState, RichUtils, Modifier } from 'draft-js';
+import { KeyBindingUtil, getDefaultKeyBinding, DraftHandleValue, CompositeDecorator, DraftEntityMutability, EditorState, RichUtils, Modifier } from 'draft-js';
 import * as React from 'react';
 import { BlockType, EntityType, InlineStyle, KeyCommand } from './config';
 import { HTMLtoState, stateToHTML } from './convert';
@@ -7,11 +7,9 @@ import LinkDecorator from './Link';
 export type EditorApi = {
   state: EditorState;
   onChange: (state: EditorState) => void;
-  focus: () => void;
   toggleBlockType: (blockType: BlockType) => void;
   setBlockData: (data: {}) => void;
   currentBlockType: BlockType;
-  setEditorRef: (editor: Editor) => void
   toHtml: () => string;
   toggleInlineStyle: (inlineStyle: InlineStyle) => void;
   hasInlineStyle: (inlineStyle: InlineStyle) => boolean;
@@ -24,16 +22,7 @@ export type EditorApi = {
 const decorator = new CompositeDecorator([LinkDecorator]);
 
 export const useEditor = (html?: string): EditorApi => {
-  const editorRef = React.useRef<Editor | null>(null);
-  const [state, setState] = React.useState(html ? EditorState.createWithContent(HTMLtoState(html), decorator): EditorState.createEmpty(decorator));
-
-  const setEditorRef = React.useCallback((editor: Editor) => {
-    editorRef.current = editor;
-  }, []);
-
-  const focus = React.useCallback(() => {
-    editorRef.current?.focus();
-  }, [editorRef]);
+  const [state, setState] = React.useState(() => html ? EditorState.createWithContent(HTMLtoState(html), decorator): EditorState.createEmpty(decorator));
 
   const toggleBlockType = React.useCallback((blockType: BlockType) => {
     setState((currentState) => RichUtils.toggleBlockType(currentState, blockType))
@@ -116,15 +105,11 @@ export const useEditor = (html?: string): EditorApi => {
     return getDefaultKeyBinding(e);
   }, []);
 
-  const toHtml = React.useCallback(() => {
-    return stateToHTML(state.getCurrentContent());
-  }, [state]);
+  const toHtml = React.useCallback(() => stateToHTML(state.getCurrentContent()), [state]);
 
-  return {
+  return React.useMemo(() => ({
     state,
     onChange: setState,
-    focus,
-    setEditorRef,
     toggleBlockType,
     currentBlockType,
     setBlockData,
@@ -135,5 +120,5 @@ export const useEditor = (html?: string): EditorApi => {
     setEntityData,
     handleKeyCommand,
     handlerKeyBinding
-  }
+  }), [state, toggleBlockType, currentBlockType, setBlockData, toggleInlineStyle, hasInlineStyle, toHtml, addLink, setEntityData, handleKeyCommand, handlerKeyBinding])
 }

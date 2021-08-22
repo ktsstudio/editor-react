@@ -4,7 +4,6 @@ import { EditorApi, useEditor } from './useEditor';
 const TextEditorContext = React.createContext<EditorApi | undefined>(undefined);
 
 export const TextEditorProvider: React.FC = ({ children }) => {
-  // '<h1>Заголовок</h1><p><span class="accent" style="background-color:#F7F6F3;color:#A41E68">Простой </span><em>текст </em>и <a href="https://test.ru">ссылка</a> и <strong>еще </strong>текст</p>'
   const editorApi = useEditor();
 
   return (
