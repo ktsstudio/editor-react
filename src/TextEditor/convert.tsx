@@ -115,7 +115,7 @@ export const HTMLtoState = convertFromHTML<DOMStringMap, BlockType>({
     }
   },
   htmlToEntity: (nodeName, node, createEntity) => {
-    if (nodeName === "a") {
+    if (nodeName === "a" && node.href) {
       return createEntity(EntityType.link, "MUTABLE", { url: node.href });
     }
 
