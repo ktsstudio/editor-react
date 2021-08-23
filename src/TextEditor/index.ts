@@ -1,5 +1,5 @@
-export { default } from './TextEditor';
+export { default } from "./TextEditor";
 
-export * from './TextEditor';
-export * from './useEditor';
-export * from './context';
+export * from "./TextEditor";
+export * from "./useEditor";
+export * from "./context";
