@@ -1,4 +1,4 @@
-import { KeyBindingUtil, getDefaultKeyBinding, DraftHandleValue, CompositeDecorator, DraftEntityMutability, EditorState, RichUtils, Modifier } from 'draft-js';
+import { KeyBindingUtil, getDefaultKeyBinding, DraftHandleValue, CompositeDecorator, DraftEntityMutability, EditorState, RichUtils } from 'draft-js';
 import * as React from 'react';
 import { BlockType, EntityType, InlineStyle, KeyCommand } from './config';
 import { HTMLtoState, stateToHTML } from './convert';
@@ -8,7 +8,6 @@ export type EditorApi = {
   state: EditorState;
   onChange: (state: EditorState) => void;
   toggleBlockType: (blockType: BlockType) => void;
-  setBlockData: (data: {}) => void;
   currentBlockType: BlockType;
   toHtml: () => string;
   toggleInlineStyle: (inlineStyle: InlineStyle) => void;
@@ -43,18 +42,6 @@ export const useEditor = (html?: string): EditorApi => {
     const currentStyle = state.getCurrentInlineStyle();
     return currentStyle.has(inlineStyle);
   }, [state]);
-
-  const setBlockData = React.useCallback((data) => {
-    setState((currentState) => {
-      const newContentState = Modifier.setBlockData(
-        currentState.getCurrentContent(),
-        currentState.getSelection(),
-        data
-      );
-
-      return EditorState.push(currentState, newContentState, 'change-block-data');
-    })
-  }, []);
 
   const setEntityData = React.useCallback((entityKey, data) => {
     setState((currentState) => {
@@ -112,7 +99,6 @@ export const useEditor = (html?: string): EditorApi => {
     onChange: setState,
     toggleBlockType,
     currentBlockType,
-    setBlockData,
     toggleInlineStyle,
     hasInlineStyle,
     toHtml,
@@ -120,5 +106,5 @@ export const useEditor = (html?: string): EditorApi => {
     setEntityData,
     handleKeyCommand,
     handlerKeyBinding
-  }), [state, toggleBlockType, currentBlockType, setBlockData, toggleInlineStyle, hasInlineStyle, toHtml, addLink, setEntityData, handleKeyCommand, handlerKeyBinding])
+  }), [state, toggleBlockType, currentBlockType, toggleInlineStyle, hasInlineStyle, toHtml, addLink, setEntityData, handleKeyCommand, handlerKeyBinding])
 }
