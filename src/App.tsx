@@ -1,10 +1,10 @@
-import React from 'react';
-import TextEditor, { TextEditorProvider } from './TextEditor';
-import ToolPanel from './ToolPanel';
+import React from "react";
+import TextEditor, { TextEditorProvider } from "./TextEditor";
+import ToolPanel from "./ToolPanel";
 
 function App() {
   return (
-    <TextEditorProvider >
+    <TextEditorProvider>
       <ToolPanel />
       <TextEditor />
     </TextEditorProvider>

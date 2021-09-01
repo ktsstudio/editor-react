@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { Editor } from 'draft-js';
-import './TextEditor.scss';
-import { BLOCK_RENDER_MAP, CUSTOM_STYLE_MAP } from './config';
-import { useEditorApi } from './context';
-import cn from 'classnames';
+import * as React from "react";
+import { Editor } from "draft-js";
+import "./TextEditor.scss";
+import { BLOCK_RENDER_MAP, CUSTOM_STYLE_MAP } from "./config";
+import { useEditorApi } from "./context";
+import cn from "classnames";
 
 export type TextEditorProps = {
   className?: string;
-}
+};
 
 const TextEditor: React.FC<TextEditorProps> = ({ className }) => {
   const editorApi = useEditorApi();
@@ -19,13 +19,12 @@ const TextEditor: React.FC<TextEditorProps> = ({ className }) => {
         handleKeyCommand={editorApi.handleKeyCommand}
         customStyleMap={CUSTOM_STYLE_MAP}
         blockRenderMap={BLOCK_RENDER_MAP}
-        ref={editorApi.setEditorRef}
         editorState={editorApi.state}
         onChange={editorApi.onChange}
         keyBindingFn={editorApi.handlerKeyBinding}
       />
     </div>
   );
-}
+};
 
 export default TextEditor;

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/heading-has-content */
-import { convertFromHTML, convertToHTML } from 'draft-convert';
-import { CUSTOM_STYLE_MAP, BlockType, EntityType, InlineStyle } from './config';
+import { convertFromHTML, convertToHTML } from "draft-convert";
+import { CUSTOM_STYLE_MAP, BlockType, EntityType, InlineStyle } from "./config";
 
 export const stateToHTML = convertToHTML<InlineStyle, BlockType>({
   styleToHTML: (style) => {
@@ -8,11 +8,18 @@ export const stateToHTML = convertToHTML<InlineStyle, BlockType>({
       case InlineStyle.BOLD:
         return <strong />;
       case InlineStyle.ITALIC:
-          return <em />;
+        return <em />;
       case InlineStyle.UNDERLINE:
-        return <span className="underline" style={{ textDecoration: 'underline' }} />;
+        return (
+          <span className="underline" style={{ textDecoration: "underline" }} />
+        );
       case InlineStyle.ACCENT:
-        return <span className="accent" style={CUSTOM_STYLE_MAP[InlineStyle.ACCENT]} />;
+        return (
+          <span
+            className="accent"
+            style={CUSTOM_STYLE_MAP[InlineStyle.ACCENT]}
+          />
+        );
       default:
         return null;
     }
@@ -22,7 +29,7 @@ export const stateToHTML = convertToHTML<InlineStyle, BlockType>({
       case BlockType.cite:
         return <cite />;
       case BlockType.h1:
-          return <h1 />;
+        return <h1 />;
       case BlockType.h2:
         return <h2 />;
       case BlockType.h3:
@@ -53,11 +60,7 @@ export const stateToHTML = convertToHTML<InlineStyle, BlockType>({
   },
   entityToHTML: (entity, originalText) => {
     if (entity.type === EntityType.link) {
-      return (
-        <a href={entity.data.url}>
-          {originalText}
-        </a>
-      );
+      return <a href={entity.data.url}>{originalText}</a>;
     }
     return originalText;
   },
@@ -65,19 +68,19 @@ export const stateToHTML = convertToHTML<InlineStyle, BlockType>({
 
 export const HTMLtoState = convertFromHTML<DOMStringMap, BlockType>({
   htmlToStyle: (nodeName, node, currentStyle) => {
-    if (nodeName === 'strong') {
-        return currentStyle.add(InlineStyle.BOLD);
+    if (nodeName === "strong") {
+      return currentStyle.add(InlineStyle.BOLD);
     }
 
-    if (nodeName === 'em') {
+    if (nodeName === "em") {
       return currentStyle.add(InlineStyle.ITALIC);
     }
 
-    if (nodeName === 'span' && node.classList.contains('underline')) {
+    if (nodeName === "span" && node.classList.contains("underline")) {
       return currentStyle.add(InlineStyle.UNDERLINE);
     }
 
-    if (nodeName === 'span' && node.classList.contains('accent')) {
+    if (nodeName === "span" && node.classList.contains("accent")) {
       return currentStyle.add(InlineStyle.ACCENT);
     }
 
@@ -87,33 +90,33 @@ export const HTMLtoState = convertFromHTML<DOMStringMap, BlockType>({
   // @ts-ignore
   htmlToBlock(nodeName, node, last) {
     switch (nodeName) {
-      case 'h1':
+      case "h1":
         return BlockType.h1;
-      case 'h2':
+      case "h2":
         return BlockType.h2;
-      case 'h3':
+      case "h3":
         return BlockType.h3;
-      case 'h4':
+      case "h4":
         return BlockType.h4;
-      case 'li':
-        if (last === 'ol') {
+      case "li":
+        if (last === "ol") {
           return BlockType.orderList;
         }
         return BlockType.list;
-      case 'blockquote':
+      case "blockquote":
         return BlockType.blockquote;
-      case 'cite':
+      case "cite":
         return BlockType.cite;
-      case 'div':
-      case 'p':
+      case "div":
+      case "p":
         return BlockType.default;
       default:
         return null;
     }
   },
   htmlToEntity: (nodeName, node, createEntity) => {
-    if (nodeName === 'a') {
-      return createEntity(EntityType.link, 'MUTABLE', { url: node.href });
+    if (nodeName === "a" && node.href) {
+      return createEntity(EntityType.link, "MUTABLE", { url: node.href });
     }
 
     return undefined;
