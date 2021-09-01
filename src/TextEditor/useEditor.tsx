@@ -43,6 +43,7 @@ export const useEditor = (html?: string): EditorApi => {
     const selection = state.getSelection();
     const content = state.getCurrentContent()
     const block = content.getBlockForKey(selection.getStartKey());
+    console.log(block.toJS());
     return block.getType() as BlockType;
   }, [state]);
 
